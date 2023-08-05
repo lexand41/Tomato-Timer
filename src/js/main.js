@@ -14,3 +14,4 @@ document.querySelector('.button-importance').addEventListener('click', ({target}
     }
   }
 });
+
