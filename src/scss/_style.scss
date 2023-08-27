@@ -46,10 +46,45 @@
   background-color: $window-panel;
 }
 
+.window__panel-task-text,
+.window__panel-title {
+  display: block;
+  text-align: center;
+  width: 25%;
+}
+
+.window__state-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.window__state {
+  opacity: .5;
+  cursor: pointer;
+}
+
+.window__error.active,
+.window__state.active {
+  opacity: 1;
+}
+
+.header__log {
+  display: block;
+  margin: 0 auto;
+}
+
 .window__body {
   background-color: $window-back-ground;
   margin-bottom: 50px;
   padding: 70px 166px 108px;
+}
+
+.window__error {
+  color: $dark-font;
+  color: $button-main;
+  text-align: center;
+  opacity: 0;
 }
 
 .window__timer-text {
@@ -70,6 +105,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.task-form.task__edit-form {
+  gap: 10px;
 }
 
 .task-form__add-button {
@@ -166,6 +205,25 @@
     background-color: darker(rgba(220, 13, 39, 0.3), 1);
   }
 }
+
+.tuch-aria {
+  position: relative;
+}
+
+.tuch-aria::before {
+  content: '';
+  display: block;
+  position: absolute;
+  box-sizing: content-box;
+  padding: 20px;
+  width: 100%;
+  height: 100%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
 
 .pomodoro-tasks__task-button {
   height: 6px;

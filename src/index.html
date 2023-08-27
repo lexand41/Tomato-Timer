@@ -9,12 +9,16 @@
 
   <link rel="preload" href="fonts/Montserrat-Regular.ttf" as="font" type="font/ttf" crossorigin>
 
+  <link rel="icon" type="image/svg+xml" href="img/svg/noto_tomato.svg">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+
   <!-- <link rel="stylesheet" href="scss/index.scss"> -->
 
   <!-- <script type="module" src="index.js"></script> -->
 
   <title>Tomato timer</title>
 </head>
+
 <body>
   <header>
     <section class="header">
@@ -29,21 +33,42 @@
       <div class="container main__container">
         <div class="pomodoro-form window">
           <div class="window__panel">
-            <p class="window__panel-title">Сверстать сайт</p>
-            <p class="window__panel-task-text">Томат 2</p>
+            <p class="window__panel-title">Активируйте задачу</p>
+            
+            <div class="window__state-wrapper">
+              <div class="window__state window__state-work active" data-use="work">
+                <img src="img/svg/noto_tomato.svg" class="header__log" alt="Tomato image">
+                <p>Работа</p>
+              </div>
+              <div class="window__state window__state-break" data-use="break">
+                <img src="img/svg/noto_tomato.svg" class="header__log" alt="Tomato image">
+                <p>Перерыв</p>
+              </div>
+              <div class="window__state window__state-relax" data-use="relax">
+                <img src="img/svg/noto_tomato.svg" class="header__log" alt="Tomato image">
+                <p>Отдых</p>
+              </div>
+            </div>
+
+            <p class="window__panel-task-text">Томат 0</p>
           </div>
           <div class="window__body">
+            <div class="window__error">Пожалуйста активируйте задачу</div>
+
             <p class="window__timer-text">25:00</p>
+
             <div class="window__buttons">
               <button class="button button-primary">Старт</button>
               <button class="button button-secondary">Стоп</button>
             </div>
           </div>
+
           <form class="task-form" action="submit">
-            <input type="text" class="task-name input-primary" name="task-name" id="task-name" placeholder="название задачи">
-            <button type="button" class="button button-importance default" aria-label="Указать важность"></button>
+            <input type="text" class="task-name input-primary" name="task-name" id="task-name" placeholder="Введите название задачи">
+            <button id="task-status" type="button" class="button button-importance default" data-status="default" aria-label="Указать важность"></button>
             <button type="submit" class="button button-primary task-form__add-button">Добавить</button>
           </form>
+
         </div>
         <div class="pomodoro-tasks">
           <p class="pomodoro-tasks__header-title">
@@ -69,7 +94,7 @@
               Продолжайте работать, пока задача не будет выполнена.
             </li>
             <li class="pomodoro-tasks__list-item">
-              Каждые 4 периода таймера делайте длинный перерыв (15-20 минут).
+              Каждые 4 периода таймера делайте длинный перерыв (15-20 минут).
             </li>
           </ul>
           <ul class="pomodoro-tasks__quest-tasks">
@@ -108,13 +133,26 @@
     </section>
   </main>
   <!-- modal with overlay -->
-  <div class="modal-overlay">
-    <div class="modal-delete">
+  <div id="modal-edit" class="modal-overlay__edit modal">
+    <div class="modal-edit modal-box">
+      <button class="modal-delete__close-button"></button>
+
+      <form class="task-form task__edit-form" action="submit">
+        <input type="text" class="edit-name input-primary" name="edit-name" id="edit-name" value="Исходный текст">
+        <button id="edit-status" type="button" class="button button-importance" data-status="default" aria-label="Указать важность"></button>
+        <button type="submit" class="button button-primary task-form__add-button">Редактировать</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-delete" class="modal-overlay modal">
+    <div class="modal-delete modal-box">
       <p class="modal-delete__title">Удалить задачу?</p>
       <button class="modal-delete__close-button"></button>
       <button class="modal-delete__delete-button button-primary">Удалить</button>
       <button class="modal-delete__cancel-button">Отмена</button>
     </div>
   </div>
+  <audio src="audio/alarm.mp3" class="audio"></audio>
 </body>
 </html>

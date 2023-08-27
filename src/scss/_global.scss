@@ -67,6 +67,11 @@ fieldset {
 
   &:hover {
     background-color: darker($button-main, 1);
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.5);
+  }
+
+  &:active {
+    box-shadow: none;
   }
 }
 
@@ -79,6 +84,11 @@ fieldset {
 
   &:hover {
     background-color: darker($button-second, 1);
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.25);
+  }
+
+  &:active {
+    box-shadow: none;
   }
 }
 
