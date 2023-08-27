@@ -56,7 +56,7 @@ export class Tomato {
     const countdown = new Date().getTime() + this.state.timeLeft * 1000;
 
     this.state.timerId = setInterval(() => {
-      this.state.timeLeft -= 10;
+      this.state.timeLeft -= 1;
       this.showTime(this.state.timeLeft);
 
       if (!(this.state.timeLeft % 10)) {
