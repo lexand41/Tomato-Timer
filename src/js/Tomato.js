@@ -1,3 +1,5 @@
+import { Task } from "./Task";
+
 export class Tomato {
   constructor({workTime=25, breakTime=5, relaxTime=15, tasks=[]} = {}) {
     this.btnStart = document.querySelector('.button-primary');
@@ -5,8 +7,6 @@ export class Tomato {
     this.timeWindow = document.querySelector('.window__timer-text');
     this.windowError = document.querySelector('.window__error');
     this.navigationBtns = document.querySelectorAll('.window__state');
-    this.panelTitle = document.querySelector('.window__panel-title');
-    this.countTomato = document.querySelector('.window__panel-task-text');
     this.audio = document.querySelector('.audio');
     this.state = {
       work: workTime,
@@ -20,10 +20,13 @@ export class Tomato {
     };
     this.tasksList = tasks;
     this.activeTodo = null;
+    this.newTask = new Task();
   }
 
   initTomato() {
     this.btnStart.addEventListener('click', () => {
+      const todoList = this.newTask.getTodo();
+      this.activeTodo = todoList.find((item) => item.isActive);
       if (!this.activeTodo) {
         this.windowError.classList.add('active')
         return;
@@ -56,7 +59,7 @@ export class Tomato {
     const countdown = new Date().getTime() + this.state.timeLeft * 1000;
 
     this.state.timerId = setInterval(() => {
-      this.state.timeLeft -= 1;
+      this.state.timeLeft -= 10;
       this.showTime(this.state.timeLeft);
 
       if (!(this.state.timeLeft % 10)) {
@@ -69,8 +72,12 @@ export class Tomato {
       }
       clearTimeout(this.state.timerId);
 
+      const todoList = this.newTask.getTodo();
+      this.activeTodo = todoList.find((item) => item.isActive);
+
       if (this.state.status === 'work') {
-        this.tomatoCounter();
+        this.activeTodo.tomato += 1;
+        this.newTask.updateTomatoTodo(this.activeTodo);
 
         if (this.activeTodo.tomato % this.state.count) {
           this.state.status = 'break';
@@ -84,39 +91,11 @@ export class Tomato {
       this.alarm();
       this.state.timeLeft = this.state[this.state.status] * 60;
       this.changeActiveBtn(this.state.status);
+      this.newTask.countTomato.textContent = `Томат ${this.activeTodo.tomato}`
       this.startTimer();
       
     }, 1000);
-  }
 
-  addTodo({title}) {
-    const todo = {
-      title,
-      tomato: 0,
-      id: Math.random().toString(16).substring(2,8),
-      isActive: false,
-    };
-    this.tasksList.push(todo);
-  };
-
-  showTodo(panelTitle, countTomato) {
-    this.panelTitle.textContent = panelTitle;
-    this.countTomato.textContent = countTomato;
-  }
-
-  doActiveTodo(id) {
-    for (let i = 0; i < this.tasksList.length; i++) {
-      this.tasksList[i].isActive = false;
-
-      if (this.tasksList[i].id === id) {
-        this.tasksList[i].isActive = true;
-        this.showTodo(this.tasksList[i].title, `Томат ${this.tasksList[i].tomato}`);
-      }
-    };
-  }
-
-  tomatoCounter() {
-    this.activeTodo.tomato += 1;
   }
 
   changeActiveBtn(dataUse) {
