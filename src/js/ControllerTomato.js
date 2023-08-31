@@ -1,10 +1,10 @@
 import { Task } from './Task';
-import { RenderToDo } from './RenderToDo';
 import { Tomato } from './Tomato';
+import { RenderTomato } from './RenderTomato';
 
 export class ControllerTomato {
   constructor({workTime, breakTime, relaxTime, tasks} = {}) {
-    this.activTasks = document.querySelectorAll('.pomodoro-tasks__task-text_active');
+    this.todoListElem = document.querySelector('.pomodoro-tasks__quest-tasks');
     this.closeBtns = document.querySelectorAll('.modal-delete__close-button');
     this.modalBoxes = document.querySelectorAll('.modal-box');
     this.modals = document.querySelectorAll('.modal');
@@ -14,26 +14,36 @@ export class ControllerTomato {
     this.editInputForm = document.querySelector('#edit-name');
     this.statusEditForm = document.querySelector('#edit-status');
     this.editForm = document.querySelector('.task__edit-form');
+    this.editBtn = this.editForm.querySelector('.button-primary');
 
-    this.newTodo = new RenderToDo(this.pomodoroForm);
-    this.newTask = new Task(this.newTodo.todoListElem, 'todo', tasks);
+    this.newTask = new Task(this.todoListElem, 'todo', tasks);
+
     this.tomato = new Tomato({
       workTime: workTime,
       breakTime: breakTime,
       relaxTime: relaxTime,
     });
+
     this.tomato.initTomato();
     this.newTask.setNumbers();
   }
 
   initControl(){
-    this.newTodo.form.addEventListener('submit', (e) =>  {
+    const {form, input, btnStatus} = RenderTomato.renderAddForm()
+
+    form.addEventListener('submit', (e) =>  {
       e.preventDefault();
+      if (!input.value) return;
+      const newNote =
+        this.newTask.addTodo(input.value, btnStatus.dataset.status);
+      btnStatus.dataset.status = 'default'
+      btnStatus.className =
+        `button button-importance ${btnStatus.dataset.status}`;
 
-      const newNote = this.newTodo.formSubmit(this.newTask)
+      form.reset();
       this.doDelete(newNote);
       this.doEdit(newNote);
-      this.doActiv(newNote);
+      this.doActive(newNote);
     });
 
     this.newTask.notes.forEach(newNote => {
@@ -45,7 +55,7 @@ export class ControllerTomato {
     });
 
     this.newTask.notes.forEach(newNote => {
-      this.doActiv(newNote);
+      this.doActive(newNote);
     });
 
     this.closeBtns.forEach(item => {
@@ -95,6 +105,15 @@ export class ControllerTomato {
       this.statusEditForm.className = `button button-importance ${newNote.status}`;
       this.editInputForm.value = newNote.name;
       this.statusEditForm.dataset.status = newNote.status;
+      this.editBtn.disabled = false;
+
+      this.editInputForm.addEventListener('input', () => {
+        if (this.editInputForm.value) {
+          this.editBtn.disabled = false;
+        } else {
+          this.editBtn.disabled = true;
+        }
+      })
 
       this.editForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -104,7 +123,7 @@ export class ControllerTomato {
     });
   }
 
-  doActiv(newNote) {
+  doActive(newNote) {
     newNote.btnTask.addEventListener('click', () => {
       this.tomato.windowError.classList.remove('active');
       newNote.active();

@@ -4,6 +4,14 @@ export class RenderTomato {
   #name = '';
   #status = 'default';
   constructor(container, name='New task', status = 'default') {
+    this.renderTasks(container)
+    this.name = name;
+    this.status = status;
+    this.container = container;
+  }
+
+  renderTasks(container) {
+    this.container = container;
     this.item = document.createElement('li');
     this.item.classList.add('pomodoro-tasks__list-task');
 
@@ -30,10 +38,6 @@ export class RenderTomato {
 
     this.wrapBtns.append(this.editBtn, this.delBtn);
     this.item.append(this.number, this.btnTask, this.popupMenu, this.wrapBtns);
-
-    this.name = name;
-    this.status = status;
-    this.container = container;
     
     if (container instanceof Task) {
       container.list.append(this.item);
@@ -49,6 +53,38 @@ export class RenderTomato {
       if (target.closest('.pomodoro-tasks__task-button')) return;
       this.wrapBtns.classList.remove('burger-popup_active');
     });
+  }
+
+  static renderAddForm() {
+    const pomodoroForm = document.querySelector('.pomodoro-form');
+
+    const form = document.createElement('form');
+    form.classList.add('task-form');
+    form.action = 'submit';
+
+    const input = document.createElement('input');
+    input.classList.add('task-name', 'input-primary');
+    input.type = 'text';
+    input.name = 'task-name';
+    input.id = 'task-name';
+    input.placeholder = 'Введите название задачи';
+
+    const btnStatus = document.createElement('button');
+    btnStatus.classList.add('button', 'button-importance', 'default');
+    btnStatus.type = 'button';
+    btnStatus.setAttribute('data-status', 'default');
+    btnStatus.id = 'task-status';
+    btnStatus.ariaLabel = 'Указать важность';
+
+    const btnAdd = document.createElement('button');
+    btnAdd.classList.add('button', 'button-primary', 'task-form__add-button');
+    btnAdd.type = 'submit';
+    btnAdd.textContent = 'Добавить';
+
+    form.append(input, btnStatus, btnAdd);
+    pomodoroForm.append(form);
+
+    return {form, input, btnStatus}
   }
 
   set name(value) {

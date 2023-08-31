@@ -1,16 +1,15 @@
 import { RenderTomato } from "./RenderTomato";
 
+
 export class Task {
   constructor(container = document.createElement('div'), key = null, newArray = []) {
     this.container = container;
     this.panelTitle = document.querySelector('.window__panel-title');
     this.countTomato = document.querySelector('.window__panel-task-text');
     this.list = document.createElement('div');
-    // this.list.classList.add('list-group');
     this.newArray = newArray;
     this.key = key;
     this.notes = [];
-    // this.max = 0;
     this.id = 'default'
     this.initTodo();
 
@@ -52,13 +51,6 @@ export class Task {
     todoItem.tomato = todo.tomato;
     localStorage.setItem('todo', JSON.stringify(todoList));
   }
-
-  // getNewId() {
-  //   for (const note of this.notes) {
-  //     if (note.id > this.max) this.max = note.id;
-  //   };
-  //   return this.max + 1;
-  // };
 
   getNewId() {
     return Math.floor(Math.random() * 1e14);
